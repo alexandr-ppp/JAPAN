@@ -40,6 +40,8 @@
       <a href="#rules"><span>06</span><em>Финал</em></a>
     </aside>
 
+    <div class="focus-feedback" id="focus-feedback" aria-live="polite" aria-atomic="true"></div>
+
     <section id="top" class="hero">
       <div class="hero-media" role="img" aria-label="Ночной Токио"></div>
       <div class="hero-content">
@@ -133,8 +135,10 @@
           </div>
         </div>
 
-        <div class="day-tabs" id="day-tabs" aria-label="Дни поездки"></div>
-        <article class="day-detail" id="day-detail" aria-live="polite"></article>
+        <div class="day-workspace">
+          <div class="day-tabs" id="day-tabs" aria-label="Дни поездки"></div>
+          <article class="day-detail" id="day-detail" aria-live="polite"></article>
+        </div>
       </section>
 
       <section id="route" class="section route-section" aria-labelledby="route-title">
@@ -147,6 +151,7 @@
         </div>
         <div class="route-map" id="route-map" aria-label="Визуализация маршрута"></div>
         <div class="phase-grid" id="phase-grid"></div>
+        <div class="route-results" id="route-results" aria-live="polite"></div>
         <div class="itinerary-grid" id="itinerary-grid"></div>
       </section>
 
