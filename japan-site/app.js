@@ -713,14 +713,11 @@ const rules = [
 
 const state = {
   selectedDay: "d0",
-  routeDay: "d0",
   search: "",
   actionChecks: readStore("jp-actions", {}),
   budgetChecks: readStore("jp-budget", {}),
   rate: Number(readStore("jp-rate", 0.48)) || 0.48
 };
-
-let feedbackTimer = null;
 
 function readStore(key, fallback) {
   try {
@@ -741,10 +738,6 @@ function el(selector) {
 
 function selectedDay() {
   return days.find((item) => item.id === state.selectedDay) || days[0];
-}
-
-function selectedRouteDay() {
-  return days.find((item) => item.id === state.routeDay) || days[0];
 }
 
 function scrollActiveDayTab() {
@@ -776,43 +769,6 @@ function flashElement(selector) {
   node.classList.remove("focus-flash");
   void node.offsetWidth;
   node.classList.add("focus-flash");
-}
-
-function hideFeedback() {
-  const box = el("#focus-feedback");
-  if (!box) return;
-  box.classList.remove("is-visible");
-  window.clearTimeout(feedbackTimer);
-}
-
-function showFeedback({ icon = "sparkles", title, text, actionLabel, actionTarget, persistent = false }) {
-  const box = el("#focus-feedback");
-  if (!box) return;
-
-  const action = actionTarget
-    ? `<button class="feedback-action" type="button" data-feedback-jump="${escapeHtml(actionTarget)}">${escapeHtml(actionLabel || "Открыть")}</button>`
-    : "";
-
-  box.innerHTML = `
-    <div class="feedback-card">
-      <i data-lucide="${escapeHtml(icon)}" aria-hidden="true"></i>
-      <div>
-        <strong>${escapeHtml(title)}</strong>
-        <span>${escapeHtml(text)}</span>
-      </div>
-      ${action}
-      <button class="feedback-close" type="button" data-feedback-close aria-label="Скрыть уведомление">
-        <i data-lucide="x" aria-hidden="true"></i>
-      </button>
-    </div>
-  `;
-  box.classList.add("is-visible");
-  callIcons();
-
-  window.clearTimeout(feedbackTimer);
-  if (!persistent) {
-    feedbackTimer = window.setTimeout(hideFeedback, 4200);
-  }
 }
 
 function escapeHtml(value) {
@@ -1072,83 +1028,12 @@ function setCurrentNav(id) {
   });
 }
 
-function renderRouteResults() {
-  const day = selectedRouteDay();
-  const dayNumber = days.findIndex((item) => item.id === day.id) + 1;
-
-  el("#route-results").innerHTML = `
-    <div>
-      <strong>Выбранный день маршрута</strong>
-      <span>${dayNumber} из ${days.length}: ${escapeHtml(day.date)} · ${escapeHtml(day.title)} · ${escapeHtml(day.city)}</span>
-    </div>
-    <button class="button subtle route-jump-button" type="button" data-open-route-day>
-      <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-      Открыть программу
-    </button>
-  `;
-}
-
-function renderRoutePreview() {
-  const day = selectedRouteDay();
-  const plan = day.planA
-    .slice(0, 3)
-    .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join("");
-
-  el("#route-preview").innerHTML = `
-    <article>
-      <div>
-        <span class="meta-label">${escapeHtml(day.date)} · ${escapeHtml(day.weekday)} · ${escapeHtml(day.city)}</span>
-        <h3>${escapeHtml(day.title)}</h3>
-        <p>${escapeHtml(day.short)}</p>
-      </div>
-      <ul>${plan}</ul>
-      <button class="button subtle" type="button" data-open-route-day>
-        <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-        Программа дня
-      </button>
-    </article>
-  `;
-}
-
-function renderItineraryGrid() {
-  el("#itinerary-grid").innerHTML = days
-    .map((day) => {
-      const selected = day.id === state.routeDay;
-      const active = selected ? " is-active" : "";
-      const inlinePlan = selected
-        ? `
-          <div class="inline-card-detail">
-            <strong>Коротко внутри</strong>
-            <ul>${day.planA.slice(0, 2).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-            <button class="button subtle" type="button" data-open-route-day>
-              <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-              Вся программа
-            </button>
-          </div>
-        `
-        : "";
-      return `
-        <article class="itinerary-card${active}" data-card-day="${day.id}" role="button" tabindex="0" aria-pressed="${selected}">
-          <img src="${escapeHtml(day.image)}" alt="${escapeHtml(day.title)}" loading="lazy" />
-          <div class="itinerary-body">
-            <span class="meta-label">${escapeHtml(day.date)} · ${escapeHtml(day.weekday)}</span>
-            <strong>${escapeHtml(day.title)}</strong>
-            <p>${escapeHtml(day.short)}</p>
-            <div class="itinerary-meta">
-              <span class="soft-pill">${escapeHtml(day.city)}</span>
-              <span class="soft-pill">ночь: ${escapeHtml(day.sleep)}</span>
-            </div>
-            <span class="card-open-button">
-              <i data-lucide="file-text" aria-hidden="true"></i>
-              Подробнее
-            </span>
-            ${inlinePlan}
-          </div>
-        </article>
-      `;
-    })
-    .join("");
+function updateStickyDayTabs() {
+  const tabs = el("#day-tabs");
+  const route = el("#route");
+  if (!tabs || !route) return;
+  const boundary = window.innerWidth <= 760 ? 220 : 128;
+  tabs.classList.toggle("is-out-of-scope", route.getBoundingClientRect().top < boundary);
 }
 
 function renderActions() {
@@ -1182,16 +1067,6 @@ function selectedBudget() {
     },
     { min: 0, max: 0, count: 0 }
   );
-}
-
-function budgetFeedbackText() {
-  const selected = selectedBudget();
-  const fixedRub = fixedItems.reduce((sum, item) => sum + item.rub, 0);
-  const yenRubMin = selected.min * state.rate;
-  const yenRubMax = selected.max * state.rate;
-  const totalMin = fixedRub + yenRubMin;
-  const totalMax = fixedRub + yenRubMax;
-  return `Выбрано ${selected.count}: ${rangeText(totalMin, totalMax, formatRub)}.`;
 }
 
 function renderBudget() {
@@ -1296,9 +1171,6 @@ function renderAll() {
   renderDayDetail();
   renderRouteMap();
   renderPhases();
-  renderRouteResults();
-  renderRoutePreview();
-  renderItineraryGrid();
   renderActions();
   renderBudget();
   renderTables();
@@ -1308,27 +1180,6 @@ function renderAll() {
 
 function bindEvents() {
   document.addEventListener("click", (event) => {
-    if (event.target.closest("[data-feedback-close]")) {
-      hideFeedback();
-      return;
-    }
-
-    const jump = event.target.closest("[data-feedback-jump]");
-    if (jump) {
-      const target = jump.dataset.feedbackJump;
-      hideFeedback();
-      if (target === "day") {
-        revealIfNeeded("#day-detail", "start");
-        flashElement("#day-detail");
-        scrollActiveDayTab();
-      }
-      if (target === "budget") {
-        revealIfNeeded("#budget-summary", "center");
-        flashElement("#budget-summary");
-      }
-      return;
-    }
-
     const sectionLink = event.target.closest('a[href^="#"]');
     if (sectionLink?.hash) {
       const targetId = decodeURIComponent(sectionLink.hash.slice(1));
@@ -1339,12 +1190,6 @@ function bindEvents() {
         target.classList.remove("focus-flash");
         void target.offsetWidth;
         target.classList.add("focus-flash");
-        showFeedback({
-          icon: "navigation",
-          title: sectionLabel(targetId),
-          text: "Раздел открыт и подсвечен на экране.",
-          persistent: false
-        });
       }, 460);
     }
 
@@ -1356,13 +1201,6 @@ function bindEvents() {
       callIcons();
       scrollActiveDayTab();
       flashElement("#day-detail");
-      const day = selectedDay();
-      showFeedback({
-        icon: "calendar-days",
-        title: `${day.date} · ${day.title}`,
-        text: "Открыта программа соседнего дня.",
-        persistent: false
-      });
       return;
     }
 
@@ -1375,44 +1213,6 @@ function bindEvents() {
       scrollActiveDayTab();
       revealIfNeeded("#day-detail", "nearest");
       flashElement("#day-detail");
-      const day = selectedDay();
-      showFeedback({
-        icon: "calendar-days",
-        title: `${day.date} · ${day.title}`,
-        text: "Открыта программа выбранного дня.",
-        persistent: false
-      });
-      return;
-    }
-
-    if (event.target.closest("[data-open-route-day]")) {
-      state.selectedDay = state.routeDay;
-      renderDayTabs();
-      renderDayDetail();
-      callIcons();
-      scrollActiveDayTab();
-      hideFeedback();
-      revealIfNeeded("#day-detail", "start");
-      flashElement("#day-detail");
-      const day = selectedDay();
-      showFeedback({
-        icon: "calendar-days",
-        title: `${day.date} · ${day.title}`,
-        text: "Полная программа дня показана в блоке выше.",
-        persistent: false
-      });
-      return;
-    }
-
-    const card = event.target.closest("[data-card-day]");
-    if (card) {
-      state.routeDay = card.dataset.cardDay;
-      renderRouteResults();
-      renderRoutePreview();
-      renderItineraryGrid();
-      callIcons();
-      flashElement(`[data-card-day="${state.routeDay}"]`);
-      hideFeedback();
       return;
     }
 
@@ -1421,12 +1221,6 @@ function bindEvents() {
       el("#day-search").value = "";
       renderAll();
       flashElement("#today");
-      showFeedback({
-        icon: "rotate-ccw",
-        title: "Поиск очищен",
-        text: "Все дни снова доступны в ленте маршрута.",
-        persistent: false
-      });
       return;
     }
 
@@ -1434,34 +1228,14 @@ function bindEvents() {
       state.actionChecks = {};
       writeStore("jp-actions", state.actionChecks);
       renderActions();
-      showFeedback({
-        icon: "list-x",
-        title: "Подготовка очищена",
-        text: "Чеклист билетов и бронирований снова в исходном виде.",
-        persistent: false
-      });
     }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    const card = event.target.closest("[data-card-day]");
-    if (!card || !["Enter", " "].includes(event.key)) return;
-    event.preventDefault();
-    card.click();
   });
 
   document.addEventListener("change", (event) => {
     const action = event.target.closest("[data-action]");
     if (action) {
       setActionCheck(action.dataset.action, action.checked);
-      const actionItem = actions.find((item) => item.id === action.dataset.action);
       action.closest(".action-card")?.classList.toggle("is-checked", action.checked);
-      showFeedback({
-        icon: action.checked ? "check-circle-2" : "circle",
-        title: action.checked ? "Отмечено" : "Снято",
-        text: actionItem?.title || "Пункт чеклиста обновлен.",
-        persistent: false
-      });
       return;
     }
 
@@ -1470,14 +1244,6 @@ function bindEvents() {
       setBudgetCheck(budget.dataset.budget, budget.checked);
       renderBudget();
       flashElement("#budget-summary");
-      showFeedback({
-        icon: "wallet-cards",
-        title: budget.checked ? "Опция добавлена" : "Опция убрана",
-        text: budgetFeedbackText(),
-        actionLabel: "Итог",
-        actionTarget: "budget",
-        persistent: false
-      });
       return;
     }
   });
@@ -1519,6 +1285,7 @@ function setupScrollSpy() {
         .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
       if (active?.target?.id) {
         setCurrentNav(active.target.id);
+        updateStickyDayTabs();
       }
     },
     {
@@ -1529,6 +1296,9 @@ function setupScrollSpy() {
 
   sections.forEach((section) => observer.observe(section));
   setCurrentNav(location.hash.slice(1) || "top");
+  updateStickyDayTabs();
+  window.addEventListener("scroll", updateStickyDayTabs, { passive: true });
+  window.addEventListener("resize", updateStickyDayTabs);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
