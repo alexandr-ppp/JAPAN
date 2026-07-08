@@ -1,0 +1,61 @@
+name: Mirror to self-hosted GitLab
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  delete:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout full repo with history and tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Git config
+        run: |
+          git config --global user.name  "mirror-bot"
+          git config --global user.email "mirror@bot"
+          git config --global safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Add GitLab remote
+        env:
+          GL_USERNAME: ${{ secrets.GL_USERNAME }}
+          GL_TOKEN: ${{ secrets.GL_TOKEN }}
+          GL_URL: ${{ secrets.GL_URL }}
+        run: |
+          set -euo pipefail
+          git remote remove gitlab 2>/dev/null || true
+          git remote add gitlab "https://${GL_USERNAME}:${GL_TOKEN}@${GL_URL}"
+
+      - name: Sync from GitHub and mirror branches & tags (incl. deletions)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Pull current GitHub state locally first.
+          git fetch origin --prune --tags
+
+          # Detach HEAD so branch refs can be updated freely.
+          git checkout --detach
+
+          # Force local branches to match origin/*, skipping the service HEAD ref.
+          while read -r BR; do
+            git update-ref "refs/heads/${BR}" "refs/remotes/origin/${BR}"
+          done < <(git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin | grep -v '^HEAD$' || true)
+
+          # Rebuild local tag state from origin to reflect deletions.
+          git tag -l | xargs -r -n1 git tag -d
+          git fetch origin --tags --prune --force
+
+          # Mirror only branches and tags, without extra service refs.
+          git push gitlab --all --prune --force
+          git push gitlab 'refs/tags/*:refs/tags/*' --prune --force

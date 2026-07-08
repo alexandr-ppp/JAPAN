@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Япония 2026 | Рабочий сайт поездки</title>
+    <meta
+      name="description"
+      content="Интерактивный план поездки в Японию 2026: маршрут, дни, бюджет, билеты, правила и чеклисты."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23050605'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%23d6a84d'/%3E%3Ctext x='32' y='39' text-anchor='middle' font-size='22' font-family='Arial' font-weight='700' fill='%23050605'%3EJP%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <header class="topbar" aria-label="Главная навигация">
+      <a class="brand" href="#top" aria-label="Япония 2026">
+        <span class="brand-mark">日</span>
+        <span>Япония 2026</span>
+      </a>
+      <nav class="topnav">
+        <a href="#today">Сегодня</a>
+        <a href="#route">Маршрут</a>
+        <a href="#budget">Бюджет</a>
+        <a href="#logistics">Логистика</a>
+        <a href="#rules">Правила</a>
+      </nav>
+    </header>
+
+    <aside class="section-rail" aria-label="Навигация по странице">
+      <a href="#top"><span>01</span><em>Старт</em></a>
+      <a href="#today"><span>02</span><em>День</em></a>
+      <a href="#route"><span>03</span><em>Путь</em></a>
+      <a href="#decisions"><span>04</span><em>Решения</em></a>
+      <a href="#budget"><span>05</span><em>Деньги</em></a>
+      <a href="#rules"><span>06</span><em>Финал</em></a>
+    </aside>
+
+    <section id="top" class="hero">
+      <div class="hero-media" role="img" aria-label="Ночной Токио"></div>
+      <div class="hero-content">
+        <div class="hero-rail-label">Route / 2026</div>
+        <p class="eyebrow">21.11.2026 - 06.12.2026</p>
+        <h1>Япония 2026</h1>
+        <div class="hero-word" aria-hidden="true">日本</div>
+        <p class="hero-copy">
+          Москва -> Токио -> Кавагутико -> Токио -> Осака -> Москва.
+          Рабочая панель поездки из Obsidian-плана: дни, решения, логистика,
+          бюджет и стоп-правила в одном месте.
+        </p>
+        <div class="hero-actions" aria-label="Быстрые действия">
+          <a class="button primary" href="#today">
+            <i data-lucide="calendar-days" aria-hidden="true"></i>
+            Открыть день
+          </a>
+          <a class="button ghost" href="#budget">
+            <i data-lucide="wallet-cards" aria-hidden="true"></i>
+            Посчитать опции
+          </a>
+        </div>
+        <div class="hero-strip" aria-label="Ключевые точки маршрута">
+          <span>Москва</span>
+          <span>Токио</span>
+          <span>Фудзи</span>
+          <span>Осака</span>
+          <span>Москва</span>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <section class="stats-band" aria-label="Сводка">
+        <div class="stat">
+          <span class="stat-value">16</span>
+          <span class="stat-label">дней в плане</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">4</span>
+          <span class="stat-label">базы ночевок</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">3</span>
+          <span class="stat-label">ключевых переезда</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">600к ₽</span>
+          <span class="stat-label">общий лимит в голове</span>
+        </div>
+      </section>
+
+      <section class="section intro-grid" aria-labelledby="dashboard-title">
+        <div>
+          <p class="section-kicker">Панель управления</p>
+          <h2 id="dashboard-title">Не смотреть всё. Выбирать режим дня.</h2>
+          <p class="section-lead">
+            План собран вокруг смены темпа: мягкий вход в Токио, воздух и виды
+            Фудзи, цифровой и шумный Токио, затем Осака с едой, Нара, Киото и
+            финальный USJ.
+          </p>
+        </div>
+        <div class="budget-mini" aria-label="Бюджеты участников">
+          <div>
+            <span>Елена</span>
+            <strong>200к ₽</strong>
+            <p>Беречь дорогие опции: USJ, teamLab, башни, шопинг, бары.</p>
+          </div>
+          <div>
+            <span>Александр</span>
+            <strong>400к ₽</strong>
+            <p>Можно брать больше активностей, но не превращать маршрут в гонку.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="today" class="section today-section" aria-labelledby="today-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Сегодня</p>
+            <h2 id="today-title">День, сценарии и стоп-условие</h2>
+          </div>
+          <div class="toolbar" aria-label="Фильтры дней">
+            <div class="search-wrap">
+              <i data-lucide="search" aria-hidden="true"></i>
+              <input id="day-search" type="search" placeholder="Поиск: Фудзи, дождь, USJ..." />
+            </div>
+            <button class="icon-button" id="reset-day-filters" type="button" title="Сбросить фильтр" aria-label="Сбросить фильтр">
+              <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="day-tabs" id="day-tabs" aria-label="Дни поездки"></div>
+        <article class="day-detail" id="day-detail" aria-live="polite"></article>
+      </section>
+
+      <section id="route" class="section route-section" aria-labelledby="route-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Маршрут</p>
+            <h2 id="route-title">Визуальный путь поездки</h2>
+          </div>
+          <div class="segmented" id="city-filter" aria-label="Фильтр маршрута"></div>
+        </div>
+        <div class="route-map" id="route-map" aria-label="Визуализация маршрута"></div>
+        <div class="phase-grid" id="phase-grid"></div>
+        <div class="itinerary-grid" id="itinerary-grid"></div>
+      </section>
+
+      <section id="decisions" class="section decision-section" aria-labelledby="decision-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">До вылета</p>
+            <h2 id="decision-title">Что купить и проверить</h2>
+          </div>
+          <button class="button subtle" id="clear-actions" type="button">
+            <i data-lucide="list-x" aria-hidden="true"></i>
+            Сбросить галочки
+          </button>
+        </div>
+        <div class="action-grid" id="action-grid"></div>
+      </section>
+
+      <section id="budget" class="section budget-section" aria-labelledby="budget-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Деньги</p>
+            <h2 id="budget-title">Калькулятор дорогих решений</h2>
+          </div>
+          <div class="rate-control">
+            <label for="yen-rate">Курс ₽ за ¥1</label>
+            <input id="yen-rate" type="number" min="0.1" max="2" step="0.01" value="0.48" />
+          </div>
+        </div>
+
+        <div class="budget-layout">
+          <div class="budget-summary" id="budget-summary"></div>
+          <div class="budget-options" id="budget-options"></div>
+        </div>
+      </section>
+
+      <section id="logistics" class="section logistics-section" aria-labelledby="logistics-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Брони и переезды</p>
+            <h2 id="logistics-title">Где спим и как двигаемся</h2>
+          </div>
+        </div>
+        <div class="logistics-grid">
+          <div>
+            <h3>Жилье</h3>
+            <div class="table-wrap">
+              <table id="hotel-table"></table>
+            </div>
+          </div>
+          <div>
+            <h3>Переезды</h3>
+            <div class="table-wrap">
+              <table id="transfer-table"></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="rules" class="section rules-section" aria-labelledby="rules-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">На месте</p>
+            <h2 id="rules-title">Правила, которые экономят силы</h2>
+          </div>
+        </div>
+        <div class="rule-grid" id="rule-grid"></div>
+      </section>
+
+      <section class="section source-section" aria-labelledby="source-title">
+        <div>
+          <p class="section-kicker">Источник</p>
+          <h2 id="source-title">Собрано из Obsidian</h2>
+          <p>
+            Сайт основан на `Japan Plan.canvas` и `Plan.md`. Подробные ссылки,
+            цены и длинная база точек остаются в исходном плане; интерфейс
+            здесь вытаскивает главное для ежедневного использования.
+            Фото: Unsplash; USJ/Super Nintendo World - Jpatokal, Wikimedia
+            Commons.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
