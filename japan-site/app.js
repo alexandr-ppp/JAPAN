@@ -713,7 +713,7 @@ const rules = [
 
 const state = {
   selectedDay: "d0",
-  cityFilter: "all",
+  routeDay: "d0",
   search: "",
   actionChecks: readStore("jp-actions", {}),
   budgetChecks: readStore("jp-budget", {}),
@@ -741,6 +741,10 @@ function el(selector) {
 
 function selectedDay() {
   return days.find((item) => item.id === state.selectedDay) || days[0];
+}
+
+function selectedRouteDay() {
+  return days.find((item) => item.id === state.routeDay) || days[0];
 }
 
 function scrollActiveDayTab() {
@@ -861,11 +865,6 @@ function callIcons() {
 function visibleDays() {
   const q = state.search.trim().toLowerCase();
   return days.filter((day) => {
-    const cityMatch =
-      state.cityFilter === "all" ||
-      day.city === state.cityFilter ||
-      day.sleep === state.cityFilter ||
-      day.tags.includes(state.cityFilter.toLowerCase());
     const haystack = [
       day.day,
       day.date,
@@ -883,7 +882,7 @@ function visibleDays() {
     ]
       .join(" ")
       .toLowerCase();
-    return cityMatch && (!q || haystack.includes(q));
+    return !q || haystack.includes(q);
   });
 }
 
@@ -1053,21 +1052,6 @@ function renderRouteMap() {
   `;
 }
 
-function renderCityFilter() {
-  const filters = ["all", "Токио", "Кавагутико", "Осака", "Нара", "Киото", "Самолет"];
-  el("#city-filter").innerHTML = filters
-    .map((filter) => {
-      const label = filter === "all" ? "Все" : filter;
-      const active = state.cityFilter === filter ? " is-active" : "";
-      return `<button class="segment-button${active}" type="button" data-city="${escapeHtml(filter)}">${escapeHtml(label)}</button>`;
-    })
-    .join("");
-}
-
-function cityFilterLabel() {
-  return state.cityFilter === "all" ? "Все города" : state.cityFilter;
-}
-
 function sectionLabel(id) {
   const labels = {
     top: "Старт",
@@ -1088,16 +1072,15 @@ function setCurrentNav(id) {
 }
 
 function renderRouteResults() {
-  const visible = visibleDays();
-  const day = selectedDay();
-  const dayText = visible.length === 1 ? "день" : visible.length >= 2 && visible.length <= 4 ? "дня" : "дней";
+  const day = selectedRouteDay();
+  const dayNumber = days.findIndex((item) => item.id === day.id) + 1;
 
   el("#route-results").innerHTML = `
     <div>
-      <strong>${escapeHtml(cityFilterLabel())}</strong>
-      <span>Показано ${visible.length} ${dayText}. Сейчас выбран: ${escapeHtml(day.date)} · ${escapeHtml(day.title)}.</span>
+      <strong>Фокус маршрута</strong>
+      <span>${dayNumber} из ${days.length}: ${escapeHtml(day.date)} · ${escapeHtml(day.title)} · ${escapeHtml(day.city)}</span>
     </div>
-    <button class="button subtle route-jump-button" type="button" data-feedback-jump="day">
+    <button class="button subtle route-jump-button" type="button" data-open-route-day>
       <i data-lucide="arrow-up-right" aria-hidden="true"></i>
       Открыть день
     </button>
@@ -1105,7 +1088,7 @@ function renderRouteResults() {
 }
 
 function renderRoutePreview() {
-  const day = selectedDay();
+  const day = selectedRouteDay();
   const plan = day.planA
     .slice(0, 3)
     .map((item) => `<li>${escapeHtml(item)}</li>`)
@@ -1119,7 +1102,7 @@ function renderRoutePreview() {
         <p>${escapeHtml(day.short)}</p>
       </div>
       <ul>${plan}</ul>
-      <button class="button subtle" type="button" data-feedback-jump="day">
+      <button class="button subtle" type="button" data-open-route-day>
         <i data-lucide="arrow-up-right" aria-hidden="true"></i>
         Полный день
       </button>
@@ -1128,19 +1111,16 @@ function renderRoutePreview() {
 }
 
 function renderItineraryGrid() {
-  const visibleIds = new Set(visibleDays().map((day) => day.id));
   el("#itinerary-grid").innerHTML = days
     .map((day) => {
-      const hidden = visibleIds.has(day.id) ? "" : " is-hidden";
-      const selected = day.id === state.selectedDay;
+      const selected = day.id === state.routeDay;
       const active = selected ? " is-active" : "";
-      const tabIndex = hidden ? "-1" : "0";
       const inlinePlan = selected
         ? `
           <div class="inline-card-detail">
             <strong>Что внутри дня</strong>
             <ul>${day.planA.slice(0, 2).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-            <button class="button subtle" type="button" data-feedback-jump="day">
+            <button class="button subtle" type="button" data-open-route-day>
               <i data-lucide="arrow-up-right" aria-hidden="true"></i>
               Полный план
             </button>
@@ -1148,7 +1128,7 @@ function renderItineraryGrid() {
         `
         : "";
       return `
-        <article class="itinerary-card${hidden}${active}" data-card-day="${day.id}" role="button" tabindex="${tabIndex}" aria-pressed="${selected}">
+        <article class="itinerary-card${active}" data-card-day="${day.id}" role="button" tabindex="0" aria-pressed="${selected}">
           <img src="${escapeHtml(day.image)}" alt="${escapeHtml(day.title)}" loading="lazy" />
           <div class="itinerary-body">
             <span class="meta-label">${escapeHtml(day.date)} · ${escapeHtml(day.weekday)}</span>
@@ -1314,7 +1294,6 @@ function renderAll() {
   renderDayDetail();
   renderRouteMap();
   renderPhases();
-  renderCityFilter();
   renderRouteResults();
   renderRoutePreview();
   renderItineraryGrid();
@@ -1372,9 +1351,6 @@ function bindEvents() {
       selectRelativeDay(Number(dayStep.dataset.dayStep));
       renderDayTabs();
       renderDayDetail();
-      renderRouteResults();
-      renderRoutePreview();
-      renderItineraryGrid();
       callIcons();
       scrollActiveDayTab();
       flashElement("#day-detail");
@@ -1393,9 +1369,6 @@ function bindEvents() {
       state.selectedDay = tab.dataset.day;
       renderDayTabs();
       renderDayDetail();
-      renderRouteResults();
-      renderRoutePreview();
-      renderItineraryGrid();
       callIcons();
       scrollActiveDayTab();
       revealIfNeeded("#day-detail", "nearest");
@@ -1410,22 +1383,20 @@ function bindEvents() {
       return;
     }
 
-    const city = event.target.closest("[data-city]");
-    if (city) {
-      state.cityFilter = city.dataset.city;
-      ensureSelectedDay();
-      renderCityFilter();
+    if (event.target.closest("[data-open-route-day]")) {
+      state.selectedDay = state.routeDay;
       renderDayTabs();
-      renderRouteResults();
-      renderRoutePreview();
-      renderItineraryGrid();
       renderDayDetail();
       callIcons();
-      flashElement("#route-results");
+      scrollActiveDayTab();
+      hideFeedback();
+      revealIfNeeded("#day-detail", "start");
+      flashElement("#day-detail");
+      const day = selectedDay();
       showFeedback({
-        icon: "map-pinned",
-        title: cityFilterLabel(),
-        text: `Фильтр применен здесь: ${visibleDays().length} дней в маршруте.`,
+        icon: "calendar-days",
+        title: `${day.date} · ${day.title}`,
+        text: "Открыт полный план выбранного дня.",
         persistent: false
       });
       return;
@@ -1433,29 +1404,18 @@ function bindEvents() {
 
     const card = event.target.closest("[data-card-day]");
     if (card) {
-      state.selectedDay = card.dataset.cardDay;
-      renderDayTabs();
-      renderDayDetail();
+      state.routeDay = card.dataset.cardDay;
       renderRouteResults();
       renderRoutePreview();
       renderItineraryGrid();
       callIcons();
-      const day = selectedDay();
-      flashElement(`[data-card-day="${state.selectedDay}"]`);
-      showFeedback({
-        icon: "file-text",
-        title: `${day.date} · ${day.title}`,
-        text: "Карточка раскрыта на месте. Полный план доступен отдельной кнопкой.",
-        actionLabel: "Полный день",
-        actionTarget: "day",
-        persistent: true
-      });
+      flashElement(`[data-card-day="${state.routeDay}"]`);
+      hideFeedback();
       return;
     }
 
     if (event.target.closest("#reset-day-filters")) {
       state.search = "";
-      state.cityFilter = "all";
       el("#day-search").value = "";
       renderAll();
       flashElement("#today");
@@ -1524,12 +1484,9 @@ function bindEvents() {
     state.search = event.target.value;
     ensureSelectedDay();
     renderDayTabs();
-    renderRouteResults();
-    renderRoutePreview();
-    renderItineraryGrid();
     renderDayDetail();
     callIcons();
-    flashElement("#route-results");
+    flashElement("#today");
   });
 
   el("#yen-rate").value = state.rate;
