@@ -1,0 +1,9 @@
+services:
+  japan-site:
+    build:
+      context: .
+    image: japan-site:latest
+    container_name: japan-site
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:80"
