@@ -894,6 +894,19 @@ function ensureSelectedDay() {
   }
 }
 
+function visibleDayIndex() {
+  const visible = visibleDays();
+  const index = visible.findIndex((day) => day.id === state.selectedDay);
+  return { visible, index: index === -1 ? 0 : index };
+}
+
+function selectRelativeDay(step) {
+  const { visible, index } = visibleDayIndex();
+  if (!visible.length) return;
+  const nextIndex = (index + step + visible.length) % visible.length;
+  state.selectedDay = visible[nextIndex].id;
+}
+
 function renderDayTabs() {
   const visibleIds = new Set(visibleDays().map((day) => day.id));
   el("#day-tabs").innerHTML = days
@@ -913,6 +926,7 @@ function renderDayTabs() {
 
 function renderDayDetail() {
   const day = days.find((item) => item.id === state.selectedDay) || days[0];
+  const { visible, index } = visibleDayIndex();
   const highlights = day.highlights
     .map((item) => {
       const body = `
@@ -937,6 +951,17 @@ function renderDayDetail() {
         </div>
         <h3>${escapeHtml(day.title)}</h3>
         <p>${escapeHtml(day.goal)}</p>
+        <div class="day-switcher" aria-label="Переключение дней">
+          <button class="button subtle" type="button" data-day-step="-1" ${visible.length < 2 ? "disabled" : ""}>
+            <i data-lucide="arrow-left" aria-hidden="true"></i>
+            Назад
+          </button>
+          <span>${visible.length ? index + 1 : 0} из ${visible.length}</span>
+          <button class="button subtle" type="button" data-day-step="1" ${visible.length < 2 ? "disabled" : ""}>
+            Вперед
+            <i data-lucide="arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
     <div class="day-columns">
@@ -1056,6 +1081,12 @@ function sectionLabel(id) {
   return labels[id] || "Раздел";
 }
 
+function setCurrentNav(id) {
+  document.querySelectorAll(".topnav a, .section-rail a, .mobile-tabbar a").forEach((link) => {
+    link.classList.toggle("is-current", link.getAttribute("href") === `#${id}`);
+  });
+}
+
 function renderRouteResults() {
   const visible = visibleDays();
   const day = selectedDay();
@@ -1073,15 +1104,51 @@ function renderRouteResults() {
   `;
 }
 
+function renderRoutePreview() {
+  const day = selectedDay();
+  const plan = day.planA
+    .slice(0, 3)
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join("");
+
+  el("#route-preview").innerHTML = `
+    <article>
+      <div>
+        <span class="meta-label">${escapeHtml(day.date)} · ${escapeHtml(day.weekday)} · ${escapeHtml(day.city)}</span>
+        <h3>${escapeHtml(day.title)}</h3>
+        <p>${escapeHtml(day.short)}</p>
+      </div>
+      <ul>${plan}</ul>
+      <button class="button subtle" type="button" data-feedback-jump="day">
+        <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+        Полный день
+      </button>
+    </article>
+  `;
+}
+
 function renderItineraryGrid() {
   const visibleIds = new Set(visibleDays().map((day) => day.id));
   el("#itinerary-grid").innerHTML = days
     .map((day) => {
       const hidden = visibleIds.has(day.id) ? "" : " is-hidden";
-      const active = day.id === state.selectedDay ? " is-active" : "";
+      const selected = day.id === state.selectedDay;
+      const active = selected ? " is-active" : "";
       const tabIndex = hidden ? "-1" : "0";
+      const inlinePlan = selected
+        ? `
+          <div class="inline-card-detail">
+            <strong>Что внутри дня</strong>
+            <ul>${day.planA.slice(0, 2).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+            <button class="button subtle" type="button" data-feedback-jump="day">
+              <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+              Полный план
+            </button>
+          </div>
+        `
+        : "";
       return `
-        <article class="itinerary-card${hidden}${active}" data-card-day="${day.id}" role="button" tabindex="${tabIndex}" aria-pressed="${day.id === state.selectedDay}">
+        <article class="itinerary-card${hidden}${active}" data-card-day="${day.id}" role="button" tabindex="${tabIndex}" aria-pressed="${selected}">
           <img src="${escapeHtml(day.image)}" alt="${escapeHtml(day.title)}" loading="lazy" />
           <div class="itinerary-body">
             <span class="meta-label">${escapeHtml(day.date)} · ${escapeHtml(day.weekday)}</span>
@@ -1095,6 +1162,7 @@ function renderItineraryGrid() {
               <i data-lucide="file-text" aria-hidden="true"></i>
               Сводка
             </span>
+            ${inlinePlan}
           </div>
         </article>
       `;
@@ -1248,6 +1316,7 @@ function renderAll() {
   renderPhases();
   renderCityFilter();
   renderRouteResults();
+  renderRoutePreview();
   renderItineraryGrid();
   renderActions();
   renderBudget();
@@ -1282,6 +1351,7 @@ function bindEvents() {
     const sectionLink = event.target.closest('a[href^="#"]');
     if (sectionLink?.hash) {
       const targetId = decodeURIComponent(sectionLink.hash.slice(1));
+      setCurrentNav(targetId);
       window.setTimeout(() => {
         const target = document.getElementById(targetId);
         if (!target) return;
@@ -1297,12 +1367,34 @@ function bindEvents() {
       }, 460);
     }
 
+    const dayStep = event.target.closest("[data-day-step]");
+    if (dayStep) {
+      selectRelativeDay(Number(dayStep.dataset.dayStep));
+      renderDayTabs();
+      renderDayDetail();
+      renderRouteResults();
+      renderRoutePreview();
+      renderItineraryGrid();
+      callIcons();
+      scrollActiveDayTab();
+      flashElement("#day-detail");
+      const day = selectedDay();
+      showFeedback({
+        icon: "calendar-days",
+        title: `${day.date} · ${day.title}`,
+        text: "День переключен в текущей карточке.",
+        persistent: false
+      });
+      return;
+    }
+
     const tab = event.target.closest("[data-day]");
     if (tab) {
       state.selectedDay = tab.dataset.day;
       renderDayTabs();
       renderDayDetail();
       renderRouteResults();
+      renderRoutePreview();
       renderItineraryGrid();
       callIcons();
       scrollActiveDayTab();
@@ -1325,6 +1417,7 @@ function bindEvents() {
       renderCityFilter();
       renderDayTabs();
       renderRouteResults();
+      renderRoutePreview();
       renderItineraryGrid();
       renderDayDetail();
       callIcons();
@@ -1344,14 +1437,15 @@ function bindEvents() {
       renderDayTabs();
       renderDayDetail();
       renderRouteResults();
+      renderRoutePreview();
       renderItineraryGrid();
       callIcons();
       const day = selectedDay();
-      flashElement("#route-results");
+      flashElement(`[data-card-day="${state.selectedDay}"]`);
       showFeedback({
         icon: "file-text",
         title: `${day.date} · ${day.title}`,
-        text: `${day.city}. ${day.short}`,
+        text: "Карточка раскрыта на месте. Полный план доступен отдельной кнопкой.",
         actionLabel: "Полный день",
         actionTarget: "day",
         persistent: true
@@ -1431,6 +1525,7 @@ function bindEvents() {
     ensureSelectedDay();
     renderDayTabs();
     renderRouteResults();
+    renderRoutePreview();
     renderItineraryGrid();
     renderDayDetail();
     callIcons();
@@ -1448,7 +1543,37 @@ function bindEvents() {
   });
 }
 
+function setupScrollSpy() {
+  const sections = ["top", "today", "route", "decisions", "budget", "logistics", "rules"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  if (!("IntersectionObserver" in window)) {
+    setCurrentNav(location.hash.slice(1) || "top");
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const active = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (active?.target?.id) {
+        setCurrentNav(active.target.id);
+      }
+    },
+    {
+      rootMargin: "-32% 0px -58% 0px",
+      threshold: [0, 0.2, 0.45, 0.7]
+    }
+  );
+
+  sections.forEach((section) => observer.observe(section));
+  setCurrentNav(location.hash.slice(1) || "top");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderAll();
   bindEvents();
+  setupScrollSpy();
 });

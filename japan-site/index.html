@@ -42,6 +42,25 @@
 
     <div class="focus-feedback" id="focus-feedback" aria-live="polite" aria-atomic="true"></div>
 
+    <nav class="mobile-tabbar" aria-label="Быстрая навигация">
+      <a href="#today">
+        <i data-lucide="calendar-days" aria-hidden="true"></i>
+        <span>День</span>
+      </a>
+      <a href="#route">
+        <i data-lucide="route" aria-hidden="true"></i>
+        <span>Маршрут</span>
+      </a>
+      <a href="#budget">
+        <i data-lucide="wallet-cards" aria-hidden="true"></i>
+        <span>Бюджет</span>
+      </a>
+      <a href="#decisions">
+        <i data-lucide="list-checks" aria-hidden="true"></i>
+        <span>Дела</span>
+      </a>
+    </nav>
+
     <section id="top" class="hero">
       <div class="hero-media" role="img" aria-label="Ночной Токио"></div>
       <div class="hero-content">
@@ -50,7 +69,7 @@
         <h1>Япония 2026</h1>
         <div class="hero-word" aria-hidden="true">日本</div>
         <p class="hero-copy">
-          Москва -> Токио -> Кавагутико -> Токио -> Осака -> Москва.
+          Москва -> Токио -> Фудзи -> Осака.
           Рабочая панель поездки из Obsidian-плана: дни, решения, логистика,
           бюджет и стоп-правила в одном месте.
         </p>
@@ -152,6 +171,7 @@
         <div class="route-map" id="route-map" aria-label="Визуализация маршрута"></div>
         <div class="phase-grid" id="phase-grid"></div>
         <div class="route-results" id="route-results" aria-live="polite"></div>
+        <div class="route-preview" id="route-preview" aria-live="polite"></div>
         <div class="itinerary-grid" id="itinerary-grid"></div>
       </section>
 
