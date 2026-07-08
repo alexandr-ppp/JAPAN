@@ -654,32 +654,53 @@ const actions = [
 ].map(([priority, title, text], index) => ({ id: `a${index}`, priority, title, text }));
 
 const fixedItems = [
-  { label: "Москва -> Токио", rub: 31406 },
-  { label: "Осака -> Москва", rub: 39613 },
-  { label: "Жилье: Токио 22-24", rub: 11876.69 },
-  { label: "Жилье: Кавагутико 24-26", rub: 27447.15 },
-  { label: "Жилье: Токио Минато 26-30", rub: 18972 },
-  { label: "Жилье: Осака Namba 30-05", rub: 21922 }
+  { group: "Авиабилеты", label: "Москва -> Токио", rub: 31406, qty: 2, note: "цена в плане за 1 человека в одну сторону" },
+  { group: "Авиабилеты", label: "Осака -> Москва", rub: 39613, qty: 2, note: "цена в плане за 1 человека в одну сторону" },
+  { group: "Жилье", label: "Токио 22-24.11", rub: 11876.69, qty: 1, note: "бронь оплачена" },
+  { group: "Жилье", label: "Кавагутико 24-26.11", rub: 27447.15, qty: 1, note: "2 ночи" },
+  { group: "Жилье", label: "Токио, Минато 26-30.11", rub: 18972, qty: 1, note: "бронь оплачена" },
+  { group: "Жилье", label: "Осака, Namba 30.11-05.12", rub: 21922, qty: 1, note: "невозвратная бронь" }
 ];
 
 const budgetOptions = [
-  { id: "ic", group: "обязательное", name: "2 x IC-карта: стартовое пополнение", note: "примерно ¥3 000 каждому", min: 3000, max: 3000, people: 2, default: true },
-  { id: "haneda", group: "обязательное", name: "Haneda -> отель общественным транспортом", note: "плановая альтернатива такси", min: 1630, max: 1630, people: 2, default: true },
-  { id: "bus-fuji", group: "обязательное", name: "Автобусы Shinjuku <-> Kawaguchiko", note: "два переезда по ¥2 200", min: 4400, max: 4400, people: 2, default: true },
-  { id: "shinkansen", group: "обязательное", name: "Nozomi Tokyo/Shinagawa -> Shin-Osaka", note: "reserved seat", min: 14720, max: 14720, people: 2, default: true },
-  { id: "nara", group: "обязательное", name: "Осака -> Нара -> Осака", note: "день в Наре", min: 1500, max: 1500, people: 2, default: true },
-  { id: "kyoto", group: "обязательное", name: "Осака -> Киото -> Осака", note: "дорога по Киото", min: 1500, max: 2000, people: 2, default: true },
-  { id: "kix", group: "обязательное", name: "Namba -> Kansai Airport", note: "Airport Express или Rapi:t", min: 970, max: 1490, people: 2, default: true },
-  { id: "usj", group: "дорогие решения", name: "USJ день без Express Pass", note: "еда, мерч и билет в рамках плана", min: 15000, max: 25000, people: 2, default: true },
-  { id: "borderless", group: "дорогие решения", name: "teamLab Borderless", note: "27.11, динамическая цена", min: 3600, max: 5600, people: 2, default: true },
-  { id: "planets", group: "опционально", name: "teamLab Planets", note: "второй teamLab только если хочется", min: 3600, max: 3600, people: 2, default: false },
-  { id: "tokyo-tower", group: "опционально", name: "Tokyo Tower", note: "Main Deck или Top Deck", min: 1500, max: 3300, people: 2, default: true },
-  { id: "blue-note", group: "опционально", name: "Blue Note Tokyo", note: "music charge, еда отдельно", min: 7700, max: 16800, people: 2, default: false },
-  { id: "joypolis", group: "опционально", name: "Tokyo Joypolis Passport", note: "крытый SEGA-парк", min: 5800, max: 5800, people: 2, default: false },
-  { id: "fuji-q", group: "опционально", name: "Fuji-Q Highland 1-Day Pass", note: "если Фудзи спрятался или хочется орать", min: 6000, max: 7800, people: 2, default: false },
-  { id: "kaiyukan", group: "опционально", name: "Osaka Aquarium Kaiyukan", note: "динамический тариф", min: 2700, max: 3500, people: 2, default: false },
-  { id: "fushimi-boats", group: "опционально", name: "Fushimi Jukoku-bune Boats", note: "03.12, лучше бронировать", min: 1900, max: 1900, people: 2, default: true },
-  { id: "power-band", group: "опционально", name: "Power-Up Band в Super Nintendo World", note: "если хочется играть руками", min: 4900, max: 5900, people: 2, default: false }
+  { id: "ic", group: "Транспорт", name: "IC-карты: стартовое пополнение", note: "по ¥3 000 на карту", min: 3000, max: 3000, qty: 2, unit: "карты", default: true },
+  { id: "haneda", group: "Транспорт", name: "Haneda -> отель общественным транспортом", note: "по плану ¥1 630 за человека", min: 1630, max: 1630, qty: 2, unit: "человека", default: true },
+  { id: "bus-fuji", group: "Транспорт", name: "Автобусы Shinjuku <-> Kawaguchiko", note: "2 рейса по ¥2 200 за человека", min: 2200, max: 2200, qty: 4, unit: "билета", default: true },
+  { id: "shinkansen", group: "Транспорт", name: "Nozomi Tokyo/Shinagawa -> Shin-Osaka", note: "reserved seat, по плану ¥14 720", min: 14720, max: 14720, qty: 2, unit: "билета", default: true },
+  { id: "nara", group: "Транспорт", name: "Осака -> Нара -> Осака", note: "около ¥1 500 за человека", min: 1500, max: 1500, qty: 2, unit: "человека", default: true },
+  { id: "kyoto", group: "Транспорт", name: "Осака -> Киото -> Осака", note: "дорога и локальные переезды", min: 1500, max: 2000, qty: 2, unit: "человека", default: true },
+  { id: "usj-train", group: "Транспорт", name: "Namba <-> Universal-City", note: "день USJ, туда-обратно", min: 720, max: 720, qty: 2, unit: "человека", default: true },
+  { id: "kix", group: "Транспорт", name: "Namba -> Kansai Airport", note: "Airport Express или Rapi:t", min: 970, max: 1490, qty: 2, unit: "человека", default: true },
+  { id: "city-transport", group: "Транспорт", name: "Метро, автобусы и короткие городские переезды", note: "15 дней по ¥800-1 500 на человека", min: 800, max: 1500, qty: 30, unit: "человеко-дней", default: true },
+  { id: "taxi-haneda", group: "Опционально", name: "Такси из Haneda вместо транспорта", note: "если прилет забрал все силы", min: 12470, max: 12470, qty: 1, unit: "машина", default: false },
+  { id: "food-daily", group: "Еда и быт", name: "Еда, кофе, комбини и обычные рестораны", note: "15 дней по ¥2 500-4 500 на человека", min: 2500, max: 4500, qty: 30, unit: "человеко-дней", default: true },
+  { id: "sento-onsen", group: "Еда и быт", name: "Sento/onsen как восстановление", note: "2 вечера на двоих, от sento до спа", min: 550, max: 3000, qty: 4, unit: "входа", default: true },
+  { id: "fuji-ropeway", group: "Впечатления", name: "Mt. Fuji Panoramic Ropeway", note: "Кавагутико, если погода дает вид", min: 1000, max: 1000, qty: 2, unit: "билета", default: true },
+  { id: "fuji-boat", group: "Впечатления", name: "Lake Kawaguchiko boat Appare", note: "короткая лодка по озеру", min: 1000, max: 1000, qty: 2, unit: "билета", default: true },
+  { id: "yurari-onsen", group: "Впечатления", name: "Yurari Onsen у Фудзи", note: "восстановление после видовых точек", min: 1200, max: 1400, qty: 2, unit: "входа", default: true },
+  { id: "saiko-village", group: "Впечатления", name: "Saiko Iyashi no Sato", note: "деревня у Фудзи", min: 500, max: 500, qty: 2, unit: "билета", default: true },
+  { id: "borderless", group: "Впечатления", name: "teamLab Borderless", note: "27.11, динамическая цена", min: 3600, max: 5600, qty: 2, unit: "билета", default: true },
+  { id: "tokyo-tower", group: "Впечатления", name: "Tokyo Tower", note: "Main Deck или Top Deck", min: 1500, max: 3300, qty: 2, unit: "билета", default: true },
+  { id: "shinjuku-gyoen", group: "Впечатления", name: "Shinjuku Gyoen", note: "сад перед вечерним Синдзюку", min: 500, max: 500, qty: 2, unit: "билета", default: true },
+  { id: "osaka-castle", group: "Впечатления", name: "Osaka Castle Museum", note: "платная часть замка", min: 1200, max: 1200, qty: 2, unit: "билета", default: true },
+  { id: "kaiyukan", group: "Впечатления", name: "Osaka Aquarium Kaiyukan", note: "вариант большого дня в Осаке", min: 2700, max: 3500, qty: 2, unit: "билета", default: true },
+  { id: "todai-ji", group: "Впечатления", name: "Todai-ji Daibutsuden", note: "главная платная точка Нары", min: 800, max: 800, qty: 2, unit: "билета", default: true },
+  { id: "wakakusa", group: "Впечатления", name: "Mount Wakakusa", note: "видовая точка Нары", min: 150, max: 150, qty: 2, unit: "билета", default: true },
+  { id: "kiyomizu", group: "Впечатления", name: "Kiyomizu-dera", note: "главная платная точка Киото", min: 500, max: 500, qty: 2, unit: "билета", default: true },
+  { id: "fushimi-boats", group: "Впечатления", name: "Fushimi Jukoku-bune Boats", note: "03.12, сезон попадает на дату", min: 1900, max: 1900, qty: 2, unit: "билета", default: true },
+  { id: "usj", group: "Впечатления", name: "USJ день без Express Pass", note: "билет, еда и мерч в рамках плана", min: 15000, max: 25000, qty: 2, unit: "человека", default: true },
+  { id: "planets", group: "Опционально", name: "teamLab Planets", note: "второй teamLab только если хочется", min: 3600, max: 3600, qty: 2, unit: "билета", default: false },
+  { id: "shibuya-sky", group: "Опционально", name: "Shibuya Sky", note: "закат дороже и быстро разбирают", min: 2700, max: 3400, qty: 2, unit: "билета", default: false },
+  { id: "blue-note", group: "Опционально", name: "Blue Note Tokyo", note: "music charge, еда отдельно", min: 7700, max: 16800, qty: 2, unit: "гостя", default: false },
+  { id: "red-tokyo", group: "Опционально", name: "RED TOKYO TOWER", note: "игровой парк внутри башни", min: 4200, max: 4800, qty: 2, unit: "билета", default: false },
+  { id: "joypolis", group: "Опционально", name: "Tokyo Joypolis Passport", note: "крытый SEGA-парк", min: 5800, max: 5800, qty: 2, unit: "билета", default: false },
+  { id: "fuji-q", group: "Опционально", name: "Fuji-Q Highland 1-Day Pass", note: "если Фудзи спрятался или хочется аттракционов", min: 6000, max: 7800, qty: 2, unit: "билета", default: false },
+  { id: "aokigahara-guide", group: "Опционально", name: "Aokigahara с гидом", note: "брать только с нормальным слотом и погодой", min: 7500, max: 7500, qty: 2, unit: "гостя", default: false },
+  { id: "ninja-cafe", group: "Опционально", name: "Ninja Experience Cafe Harajuku", note: "курсы по меню", min: 3900, max: 10400, qty: 2, unit: "гостя", default: false },
+  { id: "gear", group: "Опционально", name: "GEAR Theatre Kyoto", note: "вечернее шоу без языка", min: 3800, max: 7800, qty: 2, unit: "билета", default: false },
+  { id: "power-band", group: "Опционально", name: "Power-Up Band в Super Nintendo World", note: "если хочется играть руками", min: 4900, max: 5900, qty: 2, unit: "браслета", default: false },
+  { id: "shopping", group: "Покупки и запас", name: "Сувениры, Don Quijote, gachapon и мелочи", note: "общий конверт на двоих", min: 40000, max: 100000, qty: 1, unit: "конверт", default: true },
+  { id: "buffer", group: "Покупки и запас", name: "Резерв на внезапные траты", note: "локеры, аптека, доплаты, лишний поезд", min: 30000, max: 60000, qty: 1, unit: "резерв", default: true }
 ];
 
 const hotels = [
@@ -792,6 +813,26 @@ function formatYen(value) {
 
 function rangeText(min, max, formatter) {
   return min === max ? formatter(min) : `${formatter(min)} - ${formatter(max)}`;
+}
+
+function formatQty(option) {
+  const qty = option.qty ?? 1;
+  const unit = option.unit ?? "ед.";
+  return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 1 }).format(qty)} ${unit}`;
+}
+
+function optionTotal(option, field) {
+  return option[field] * (option.qty ?? 1);
+}
+
+function fixedTotalRub() {
+  return fixedItems.reduce((sum, item) => sum + item.rub * (item.qty ?? 1), 0);
+}
+
+function fixedGroupTotal(group) {
+  return fixedItems
+    .filter((item) => item.group === group)
+    .reduce((sum, item) => sum + item.rub * (item.qty ?? 1), 0);
 }
 
 function getBudgetCheck(option) {
@@ -1059,65 +1100,86 @@ function selectedBudget() {
   return budgetOptions.reduce(
     (acc, option) => {
       if (getBudgetCheck(option)) {
-        acc.min += option.min * option.people;
-        acc.max += option.max * option.people;
+        const min = optionTotal(option, "min");
+        const max = optionTotal(option, "max");
+        const group = acc.groups.get(option.group) ?? { min: 0, max: 0, count: 0 };
+        group.min += min;
+        group.max += max;
+        group.count += 1;
+        acc.groups.set(option.group, group);
+        acc.min += min;
+        acc.max += max;
         acc.count += 1;
       }
       return acc;
     },
-    { min: 0, max: 0, count: 0 }
+    { min: 0, max: 0, count: 0, groups: new Map() }
   );
 }
 
 function renderBudget() {
   const selected = selectedBudget();
-  const fixedRub = fixedItems.reduce((sum, item) => sum + item.rub, 0);
+  const fixedRub = fixedTotalRub();
+  const flightRub = fixedGroupTotal("Авиабилеты");
+  const stayRub = fixedGroupTotal("Жилье");
   const yenRubMin = selected.min * state.rate;
   const yenRubMax = selected.max * state.rate;
   const totalMin = fixedRub + yenRubMin;
   const totalMax = fixedRub + yenRubMax;
-  const comfortPercent = Math.min(100, Math.round((totalMax / 300000) * 100));
+  const comfortPercent = Math.min(100, Math.round((totalMax / 400000) * 100));
   const expandedPercent = Math.min(100, Math.round((totalMax / 600000) * 100));
   const totalDisplay =
     totalMin === totalMax
       ? formatRub(totalMin)
       : `${formatRub(totalMin)}<span>до ${formatRub(totalMax)}</span>`;
+  const groupRows = Array.from(selected.groups.entries())
+    .map(
+      ([group, value]) => `
+        <li>
+          <span>${escapeHtml(group)} · ${value.count} поз.</span>
+          <strong>${rangeText(value.min, value.max, formatYen)}</strong>
+        </li>
+      `
+    )
+    .join("");
 
   el("#budget-summary").innerHTML = `
     <span class="meta-label">Выбрано ${selected.count} позиций</span>
     <div class="budget-total">${totalDisplay}</div>
     <p>
-      Здесь видно, какие впечатления двигают бюджет: перелеты и жилье уже
-      заложены в рублях, а билеты, транспорт и развлечения пересчитываются из
-      йен по курсу ${state.rate.toFixed(2)} ₽ за ¥1.
+      Перелеты считаются на двоих: в плане цена указана за один билет в одну
+      сторону на одного человека. Жилье заложено отдельной фиксированной базой,
+      а все расходы на месте пересчитываются из йен по курсу ${state.rate.toFixed(2)} ₽ за ¥1.
     </p>
     <div class="budget-bars">
       <div class="budget-bar">
-        <label><span>Комфортный коридор</span><span>${comfortPercent}%</span></label>
+        <label><span>Ориентир 400к</span><span>${comfortPercent}%</span></label>
         <div class="bar-track"><div class="bar-fill red" style="width:${comfortPercent}%"></div></div>
       </div>
       <div class="budget-bar">
-        <label><span>Расширенный коридор</span><span>${expandedPercent}%</span></label>
+        <label><span>Общий потолок 600к</span><span>${expandedPercent}%</span></label>
         <div class="bar-track"><div class="bar-fill" style="width:${expandedPercent}%"></div></div>
       </div>
     </div>
     <ul class="fixed-list">
-      <li><span>Перелеты и жилье</span><strong>${formatRub(fixedRub)}</strong></li>
+      <li><span>Авиабилеты: 2 человека, туда и обратно</span><strong>${formatRub(flightRub)}</strong></li>
+      <li><span>Жилье: 4 брони</span><strong>${formatRub(stayRub)}</strong></li>
       <li><span>Выбранные опции в йенах</span><strong>${rangeText(selected.min, selected.max, formatYen)}</strong></li>
       <li><span>Опции в рублях</span><strong>${rangeText(yenRubMin, yenRubMax, formatRub)}</strong></li>
     </ul>
+    <ul class="budget-group-list">${groupRows}</ul>
   `;
 
   el("#budget-options").innerHTML = budgetOptions
     .map((option) => {
-      const min = option.min * option.people;
-      const max = option.max * option.people;
+      const min = optionTotal(option, "min");
+      const max = optionTotal(option, "max");
       return `
         <label class="option-row">
           <input type="checkbox" data-budget="${option.id}" ${getBudgetCheck(option) ? "checked" : ""} />
           <span class="option-main">
             <strong>${escapeHtml(option.name)}</strong>
-            <span>${escapeHtml(option.group)} · ${escapeHtml(option.note)} · ${option.people} чел.</span>
+            <span>${escapeHtml(option.group)} · ${escapeHtml(option.note)} · ${escapeHtml(formatQty(option))}</span>
           </span>
           <span class="option-price">${rangeText(min, max, formatYen)}</span>
         </label>
