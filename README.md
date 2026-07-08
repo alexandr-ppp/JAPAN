@@ -21,20 +21,21 @@ docker compose up -d --build
 После запуска сайт будет доступен на:
 
 ```text
-http://SERVER_IP:8080
+http://SERVER_IP
+https://japan.feast-bridge.ru
 ```
 
-Порт можно поменять через переменную `PORT`:
+HTTP/HTTPS порты можно поменять через переменные:
 
 ```bash
-PORT=80 docker compose up -d --build
+HTTP_PORT=8080 HTTPS_PORT=8443 docker compose up -d --build
 ```
 
 ## Запуск без Compose
 
 ```bash
 docker build -t japan-site .
-docker run -d --name japan-site --restart unless-stopped -p 8080:80 japan-site
+docker run -d --name japan-site --restart unless-stopped -p 80:80 -p 443:443 japan-site
 ```
 
 ## Обновление на сервере
@@ -56,7 +57,7 @@ docker compose down
 
 ```text
 japan-site/           # статический сайт
-nginx/default.conf    # nginx-конфиг контейнера
+Caddyfile             # домен, HTTPS и static server
 Dockerfile            # production image
 docker-compose.yml    # быстрый запуск на сервере
 ```
