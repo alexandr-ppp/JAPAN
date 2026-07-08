@@ -655,7 +655,7 @@ th {
 .option-main span,
 .fixed-list,
 td,
-.source-section p {
+.cta-section p {
   color: var(--muted);
   line-height: 1.5;
 }
@@ -1536,12 +1536,19 @@ tr:last-child td {
   border-left-color: var(--gold);
 }
 
-.source-section {
+.cta-section {
   padding-bottom: 84px;
 }
 
-.source-section p {
+.cta-section p {
   max-width: 780px;
+}
+
+.cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
 }
 
 @media (max-width: 1240px) {

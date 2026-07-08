@@ -25,25 +25,25 @@ const phases = [
     title: "Токио 1",
     period: "22-24.11",
     image: imageSet.tokyo,
-    text: "Мягкий вход, старая Япония, Yanesen, первые аркады, неон без перегруза."
+    text: "Первое знакомство без перегруза: старые районы, спокойный вечер и первые неоновые сцены."
   },
   {
     title: "Кавагутико",
     period: "24-26.11",
     image: imageSet.fuji,
-    text: "Фудзи, озеро, онсен, осенние виды, запас на дождь и спокойный темп."
+    text: "Пауза у горы: озеро, онсен, осенние виды и запасной план на облака или дождь."
   },
   {
     title: "Токио 2",
     period: "26-30.11",
     image: imageSet.tokyo,
-    text: "Харадзюку, Шибуя, Минато, teamLab, Одайба, Акихабара и финальный Синдзюку."
+    text: "Большой городской блок: мода, башни, digital art, залив, игры и вечерний Синдзюку."
   },
   {
     title: "Осака",
     period: "30.11-05.12",
     image: imageSet.osaka,
-    text: "Namba, Dotonbori, Нара, Киото, Universal Studios Japan и спокойный вылет."
+    text: "Финал на контрастах: еда и неон Осаки, древняя Нара, Киото и полный день в USJ."
   }
 ];
 
@@ -52,7 +52,7 @@ const routeStops = [
     index: "01",
     title: "Москва",
     date: "21.11",
-    caption: "Вылет 17:25, длинный перелет и сохраненные офлайн-документы.",
+    caption: "Старт без суеты: вечерний вылет, документы офлайн и запас по багажу.",
     x: 62,
     y: 94,
     labelX: 18,
@@ -65,7 +65,7 @@ const routeStops = [
     index: "02",
     title: "Токио",
     date: "22-24.11",
-    caption: "Мягкий вход, Yanesen, первые аркады, старая Япония и неон.",
+    caption: "Мягкий вход в город: старые кварталы, первая еда, аркады и неон без гонки.",
     x: 268,
     y: 154,
     labelX: 222,
@@ -78,7 +78,7 @@ const routeStops = [
     index: "03",
     title: "Кавагутико",
     date: "24-26.11",
-    caption: "Фудзи, озеро, канатка, онсен и правило: если гора видна, сначала виды.",
+    caption: "Два дня ради воздуха, онсена и видов: если Фудзи открыт, сначала едем к панорамам.",
     x: 346,
     y: 262,
     labelX: 282,
@@ -91,7 +91,7 @@ const routeStops = [
     index: "04",
     title: "Токио 2",
     date: "26-30.11",
-    caption: "Харадзюку, Шибуя, Минато, teamLab, Одайба и финальный Синдзюку.",
+    caption: "Вторая волна Токио: Харадзюку, Шибуя, Минато, teamLab, Одайба и Синдзюку.",
     x: 426,
     y: 154,
     labelX: 438,
@@ -104,7 +104,7 @@ const routeStops = [
     index: "05",
     title: "Осака",
     date: "30.11-05.12",
-    caption: "Namba, Dotonbori, Нара, Киото, USJ и спокойный трансфер в KIX.",
+    caption: "База для Кансаи: Namba, Dotonbori, Нара, Киото, USJ и удобный вылет через KIX.",
     x: 564,
     y: 266,
     labelX: 590,
@@ -117,7 +117,7 @@ const routeStops = [
     index: "06",
     title: "Москва",
     date: "06.12",
-    caption: "Прилет 18:05, багаж, чеки, фотографии и финальная сверка вещей.",
+    caption: "Финальная точка: прилет, багаж, фотографии, сувениры и спокойное завершение.",
     x: 676,
     y: 104,
     labelX: 610,
@@ -178,7 +178,7 @@ const days = [
       "Shibuya Crossing, Hachiko, Nonbei Yokocho, если есть силы.",
       "Караоке или аркады только если джетлаг внезапно дал энергию."
     ],
-    stop: "Не ехать далеко ради галочки. Завтра первый полноценный день.",
+    stop: "Не добавлять дальние точки в день прилета. Завтра первый полноценный день.",
     highlights: [
       { name: "Haneda Airport Garden", price: "еда/кофе ¥800-2 500", url: mapUrl("Haneda Airport Garden Terminal 3") },
       { name: "Tourist PASMO/SUICA", price: "зарядить примерно на ¥3 000" },
@@ -315,7 +315,7 @@ const days = [
       "Hanazono Shrine.",
       "Thermae-Yu."
     ],
-    stop: "Харадзюку + Шибуя достаточно. Не добивать ещё и большим музеем.",
+    stop: "Харадзюку + Шибуя достаточно. Большой музей лучше оставить на другой день.",
     highlights: [
       { name: "Автобус Kawaguchiko -> Shinjuku", price: "¥2 200 за человека", url: "https://highway-buses.jp/course/kawaguchiko.php" },
       { name: "Meiji Jingu", price: "бесплатно", url: mapUrl("Meiji Jingu") },
@@ -393,8 +393,8 @@ const days = [
     city: "Токио",
     sleep: "Токио",
     title: "Последний полный Токио",
-    short: "Парк, бесплатная смотровая, Shinjuku, сбор вещей без ночного ада.",
-    goal: "Красивый финал Токио и сбор вещей без ночного ада.",
+    short: "Парк, бесплатная смотровая, Shinjuku и сбор вещей без поздней гонки.",
+    goal: "Красиво закрыть токийскую часть и подготовиться к утреннему переезду.",
     image: imageSet.tokyo,
     tags: ["токио", "shinjuku", "skytree", "live", "бар", "сбор"],
     planA: [
@@ -427,7 +427,7 @@ const days = [
     sleep: "Осака",
     title: "Токио -> Осака",
     short: "Синкансэн как часть поездки, Namba, Dotonbori, Glico и еда.",
-    goal: "Переезд как часть поездки, не как бытовая каторга.",
+    goal: "Сделать переезд частью впечатления, а не потерянным днем.",
     image: imageSet.train,
     tags: ["токио", "осака", "синкансэн", "namba", "dotonbori", "переезд"],
     planA: [
@@ -572,7 +572,7 @@ const days = [
       "Поймать Timed Entry / Standby Entry для Super Nintendo World.",
       "Приоритеты: Super Nintendo World, Mario Kart, Donkey Kong, Harry Potter, Flying Dinosaur.",
       "Еда и мерч внутри парка или Universal CityWalk.",
-      "Вернуться в Namba и не уходить в жесткий барный разнос."
+      "Вернуться в Namba и оставить силы на спокойный финальный день."
     ],
     planB: ["Без запасного тяжелого плана. Весь день в парке."],
     stop: "Перед USJ не уходить в тяжелую ночь, потому что нужен ранний старт.",
@@ -965,7 +965,7 @@ function renderDayDetail() {
     </div>
     <div class="day-columns">
       <section class="detail-block accent">
-        <h3><i data-lucide="route" aria-hidden="true"></i>План А</h3>
+        <h3><i data-lucide="route" aria-hidden="true"></i>Главный сценарий</h3>
         <ul>${day.planA.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
       </section>
       <section class="detail-block">
@@ -973,11 +973,11 @@ function renderDayDetail() {
         <ul>${day.planB.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
       </section>
       <section class="detail-block gold">
-        <h3><i data-lucide="badge-alert" aria-hidden="true"></i>Стоп</h3>
+        <h3><i data-lucide="badge-alert" aria-hidden="true"></i>Баланс дня</h3>
         <p>${escapeHtml(day.stop)}</p>
       </section>
       <section class="detail-block">
-        <h3><i data-lucide="map-pinned" aria-hidden="true"></i>Точки и деньги</h3>
+        <h3><i data-lucide="map-pinned" aria-hidden="true"></i>Ключевые места и цены</h3>
         <ul class="highlight-list">${highlights}</ul>
       </section>
     </div>
@@ -1040,10 +1040,11 @@ function renderRouteMap() {
         </div>
         <div class="route-map-copy">
           <p class="section-kicker">Flight / Bus / Shinkansen</p>
-          <h3>Один маршрут, разные режимы</h3>
+          <h3>Маршрут держится на смене ритма</h3>
           <p>
-            Длинный перелет в Токио, короткая вылазка к Фудзи, возвращение в
-            город, синкансэн до Осаки и спокойный вылет через KIX.
+            Токио дает мягкий старт, Кавагутико выключает городской шум,
+            вторая часть Токио добавляет архитектуру и digital art, а Осака
+            собирает финал вокруг еды, Нары, Киото и USJ.
           </p>
         </div>
       </div>
@@ -1055,12 +1056,12 @@ function renderRouteMap() {
 function sectionLabel(id) {
   const labels = {
     top: "Старт",
-    today: "Сегодня",
+    today: "Дни",
     route: "Маршрут",
-    decisions: "Решения",
+    decisions: "Билеты",
     budget: "Бюджет",
     logistics: "Логистика",
-    rules: "Правила"
+    rules: "Принципы"
   };
   return labels[id] || "Раздел";
 }
@@ -1077,12 +1078,12 @@ function renderRouteResults() {
 
   el("#route-results").innerHTML = `
     <div>
-      <strong>Фокус маршрута</strong>
+      <strong>Выбранный день маршрута</strong>
       <span>${dayNumber} из ${days.length}: ${escapeHtml(day.date)} · ${escapeHtml(day.title)} · ${escapeHtml(day.city)}</span>
     </div>
     <button class="button subtle route-jump-button" type="button" data-open-route-day>
       <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-      Открыть день
+      Открыть программу
     </button>
   `;
 }
@@ -1104,7 +1105,7 @@ function renderRoutePreview() {
       <ul>${plan}</ul>
       <button class="button subtle" type="button" data-open-route-day>
         <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-        Полный день
+        Программа дня
       </button>
     </article>
   `;
@@ -1118,11 +1119,11 @@ function renderItineraryGrid() {
       const inlinePlan = selected
         ? `
           <div class="inline-card-detail">
-            <strong>Что внутри дня</strong>
+            <strong>Коротко внутри</strong>
             <ul>${day.planA.slice(0, 2).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
             <button class="button subtle" type="button" data-open-route-day>
               <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-              Полный план
+              Вся программа
             </button>
           </div>
         `
@@ -1140,7 +1141,7 @@ function renderItineraryGrid() {
             </div>
             <span class="card-open-button">
               <i data-lucide="file-text" aria-hidden="true"></i>
-              Сводка
+              Подробнее
             </span>
             ${inlinePlan}
           </div>
@@ -1200,8 +1201,8 @@ function renderBudget() {
   const yenRubMax = selected.max * state.rate;
   const totalMin = fixedRub + yenRubMin;
   const totalMax = fixedRub + yenRubMax;
-  const lenaPercent = Math.min(100, Math.round((totalMax / 200000) * 100));
-  const alexPercent = Math.min(100, Math.round((totalMax / 400000) * 100));
+  const comfortPercent = Math.min(100, Math.round((totalMax / 300000) * 100));
+  const expandedPercent = Math.min(100, Math.round((totalMax / 600000) * 100));
   const totalDisplay =
     totalMin === totalMax
       ? formatRub(totalMin)
@@ -1211,23 +1212,24 @@ function renderBudget() {
     <span class="meta-label">Выбрано ${selected.count} позиций</span>
     <div class="budget-total">${totalDisplay}</div>
     <p>
-      Зафиксированные рублевые записи из плана плюс выбранные расходы в йенах
-      по курсу ${state.rate.toFixed(2)} ₽ за ¥1.
+      Здесь видно, какие впечатления двигают бюджет: перелеты и жилье уже
+      заложены в рублях, а билеты, транспорт и развлечения пересчитываются из
+      йен по курсу ${state.rate.toFixed(2)} ₽ за ¥1.
     </p>
     <div class="budget-bars">
       <div class="budget-bar">
-        <label><span>Лимит Елены</span><span>${lenaPercent}%</span></label>
-        <div class="bar-track"><div class="bar-fill red" style="width:${lenaPercent}%"></div></div>
+        <label><span>Комфортный коридор</span><span>${comfortPercent}%</span></label>
+        <div class="bar-track"><div class="bar-fill red" style="width:${comfortPercent}%"></div></div>
       </div>
       <div class="budget-bar">
-        <label><span>Лимит Александра</span><span>${alexPercent}%</span></label>
-        <div class="bar-track"><div class="bar-fill" style="width:${alexPercent}%"></div></div>
+        <label><span>Расширенный коридор</span><span>${expandedPercent}%</span></label>
+        <div class="bar-track"><div class="bar-fill" style="width:${expandedPercent}%"></div></div>
       </div>
     </div>
     <ul class="fixed-list">
-      <li><span>Фиксировано в рублях</span><strong>${formatRub(fixedRub)}</strong></li>
-      <li><span>Выбранные йены</span><strong>${rangeText(selected.min, selected.max, formatYen)}</strong></li>
-      <li><span>Йены в рублях</span><strong>${rangeText(yenRubMin, yenRubMax, formatRub)}</strong></li>
+      <li><span>Перелеты и жилье</span><strong>${formatRub(fixedRub)}</strong></li>
+      <li><span>Выбранные опции в йенах</span><strong>${rangeText(selected.min, selected.max, formatYen)}</strong></li>
+      <li><span>Опции в рублях</span><strong>${rangeText(yenRubMin, yenRubMax, formatRub)}</strong></li>
     </ul>
   `;
 
@@ -1358,7 +1360,7 @@ function bindEvents() {
       showFeedback({
         icon: "calendar-days",
         title: `${day.date} · ${day.title}`,
-        text: "День переключен в текущей карточке.",
+        text: "Открыта программа соседнего дня.",
         persistent: false
       });
       return;
@@ -1377,7 +1379,7 @@ function bindEvents() {
       showFeedback({
         icon: "calendar-days",
         title: `${day.date} · ${day.title}`,
-        text: "День открыт в блоке рядом с выбором.",
+        text: "Открыта программа выбранного дня.",
         persistent: false
       });
       return;
@@ -1396,7 +1398,7 @@ function bindEvents() {
       showFeedback({
         icon: "calendar-days",
         title: `${day.date} · ${day.title}`,
-        text: "Открыт полный план выбранного дня.",
+        text: "Полная программа дня показана в блоке выше.",
         persistent: false
       });
       return;
@@ -1421,8 +1423,8 @@ function bindEvents() {
       flashElement("#today");
       showFeedback({
         icon: "rotate-ccw",
-        title: "Фильтры сброшены",
-        text: "Все дни снова видны, выбран первый доступный день.",
+        title: "Поиск очищен",
+        text: "Все дни снова доступны в ленте маршрута.",
         persistent: false
       });
       return;
@@ -1434,8 +1436,8 @@ function bindEvents() {
       renderActions();
       showFeedback({
         icon: "list-x",
-        title: "Галочки очищены",
-        text: "Чеклист до вылета сброшен на этом экране.",
+        title: "Подготовка очищена",
+        text: "Чеклист билетов и бронирований снова в исходном виде.",
         persistent: false
       });
     }
