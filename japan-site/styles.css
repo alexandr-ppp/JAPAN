@@ -1519,7 +1519,7 @@ tr:last-child td {
 
 @media (max-width: 760px) {
   html {
-    scroll-padding-top: 132px;
+    scroll-padding-top: 96px;
   }
 
   body {
@@ -1694,7 +1694,7 @@ tr:last-child td {
   .section {
     padding-top: 82px;
     padding-bottom: 12px;
-    scroll-margin-top: 132px;
+    scroll-margin-top: 96px;
   }
 
   .section-head {
@@ -1724,13 +1724,13 @@ tr:last-child td {
 
   .day-tabs {
     position: sticky;
-    top: 112px;
+    top: 82px;
     z-index: 11;
     display: flex;
-    gap: 8px;
-    margin: 0 -14px 18px;
+    gap: 6px;
+    margin: 0 -14px 12px;
     overflow-x: auto;
-    padding: 8px 14px;
+    padding: 6px 14px;
     border-block: 1px solid rgba(247, 241, 223, 0.1);
     background: rgba(5, 6, 5, 0.86);
     scroll-padding-inline: 14px;
@@ -1744,9 +1744,18 @@ tr:last-child td {
   }
 
   .tab-button {
-    flex: 0 0 min(76vw, 244px);
-    min-height: 64px;
+    flex: 0 0 min(58vw, 190px);
+    min-height: 48px;
+    padding: 8px 10px;
     scroll-snap-align: start;
+  }
+
+  .tab-button strong {
+    font-size: 0.82rem;
+  }
+
+  .tab-button span {
+    font-size: 0.68rem;
   }
 
   .day-visual,
